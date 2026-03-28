@@ -1,0 +1,20 @@
+# Oráculo — .gitignore
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (si se usa para desarrollo local)
+node_modules/
+npm-debug.log*
+
+# Otros
+*.log

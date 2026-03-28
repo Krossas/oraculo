@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Oráculo — Motor de rol en solitario. Oráculo, dados, generadores narrativos y registro de sesión.">
+  <meta name="theme-color" content="#08070a">
+
+  <!-- Open Graph (opcional para compartir) -->
+  <meta property="og:title" content="Oráculo — Motor de Rol en Solitario">
+  <meta property="og:description" content="Herramienta de apoyo para juego de rol en solitario. Sin IA, sin suscripción, sin fricción.">
+  <meta property="og:type" content="website">
+
+  <title>Oráculo — Motor de Rol en Solitario</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HEADER
+═══════════════════════════════════════ -->
+<header id="header">
+  <div class="brand">
+    <div class="brand-title">Oráculo</div>
+    <div class="brand-sub">Motor de Rol en Solitario</div>
+  </div>
+
+  <div class="chaos-wrap">
+    <div class="chaos-label">Factor de Caos</div>
+    <div class="chaos-controls">
+      <button class="chaos-btn" id="chaosDown" aria-label="Reducir caos">−</button>
+      <div class="chaos-pips" id="pips" aria-label="Nivel de caos"></div>
+      <span class="chaos-value" id="chaosVal">5</span>
+      <button class="chaos-btn" id="chaosUp" aria-label="Aumentar caos">+</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════
+     TABS
+═══════════════════════════════════════ -->
+<nav id="tabs" role="tablist">
+  <button class="tab active" data-tab="dados"   role="tab" aria-selected="true">🎲 Dados</button>
+  <button class="tab"        data-tab="oraculo" role="tab">🔮 Oráculo</button>
+  <button class="tab"        data-tab="ideas"   role="tab">⚡ Ideas</button>
+  <button class="tab"        data-tab="notas"   role="tab">📝 Notas</button>
+  <button class="tab"        data-tab="log"     role="tab">📜 Registro</button>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     PANEL: DADOS
+═══════════════════════════════════════ -->
+<section class="panel active" id="tab-dados" role="tabpanel">
+
+  <div class="card">
+    <div class="card-label">Tipo de dado rápido</div>
+    <div class="dice-grid">
+      <button class="dice-quick" data-d="1d4">d4</button>
+      <button class="dice-quick" data-d="1d6">d6</button>
+      <button class="dice-quick" data-d="1d8">d8</button>
+      <button class="dice-quick" data-d="1d10">d10</button>
+      <button class="dice-quick" data-d="1d12">d12</button>
+      <button class="dice-quick" data-d="1d20">d20</button>
+      <button class="dice-quick" data-d="1d100">d%</button>
+      <button class="dice-quick" data-d="4df">4dF</button>
+    </div>
+    <div class="dice-input-row">
+      <input type="text" id="diceInput" placeholder="2d6 · 1d20+3 · 3d8-1 · 4df" value="2d6" aria-label="Notación de dados">
+      <button class="btn-primary" id="rollBtn">Tirar</button>
+    </div>
+    <div class="result-box" id="diceBox">
+      <span class="result-placeholder">Introduce una tirada y pulsa tirar</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Tiradas frecuentes</div>
+    <div class="quick-tags">
+      <button class="btn-ghost" data-q="2d6">2d6 resolución</button>
+      <button class="btn-ghost" data-q="3d6">3d6 atributo</button>
+      <button class="btn-ghost" data-q="1d20">1d20 acción</button>
+      <button class="btn-ghost" data-q="2d6+2">2d6+2 bonificado</button>
+      <button class="btn-ghost" data-q="2d6-2">2d6−2 penalizado</button>
+      <button class="btn-ghost" data-q="4df">4dF FATE</button>
+      <button class="btn-ghost" data-q="2d10">2d10 Year Zero</button>
+      <button class="btn-ghost" data-q="1d100">d% percentil</button>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════
+     PANEL: ORÁCULO
+═══════════════════════════════════════ -->
+<section class="panel" id="tab-oraculo" role="tabpanel">
+
+  <div class="card">
+    <div class="card-label">Probabilidad de la pregunta</div>
+    <div class="prob-list">
+      <input type="radio" name="prob" id="pMP" value="muy-probable"   class="prob-opt">
+      <label for="pMP" class="prob-label">
+        Muy probable
+        <div class="prob-track"><div class="prob-fill" style="width:85%"></div></div>
+      </label>
+
+      <input type="radio" name="prob" id="pP"  value="probable"       class="prob-opt">
+      <label for="pP" class="prob-label">
+        Probable
+        <div class="prob-track"><div class="prob-fill" style="width:70%"></div></div>
+      </label>
+
+      <input type="radio" name="prob" id="pN"  value="neutral"        class="prob-opt" checked>
+      <label for="pN" class="prob-label">
+        Neutral
+        <div class="prob-track"><div class="prob-fill" style="width:50%"></div></div>
+      </label>
+
+      <input type="radio" name="prob" id="pI"  value="improbable"     class="prob-opt">
+      <label for="pI" class="prob-label">
+        Improbable
+        <div class="prob-track"><div class="prob-fill" style="width:30%"></div></div>
+      </label>
+
+      <input type="radio" name="prob" id="pMI" value="muy-improbable" class="prob-opt">
+      <label for="pMI" class="prob-label">
+        Muy improbable
+        <div class="prob-track"><div class="prob-fill" style="width:15%"></div></div>
+      </label>
+    </div>
+
+    <button class="btn-primary full" id="askBtn">Preguntar al Oráculo</button>
+
+    <div class="result-box" id="oracleBox" style="min-height:110px;">
+      <span class="result-placeholder">El oráculo aguarda tu pregunta</span>
+    </div>
+
+    <div class="prompt-block" id="promptBlock"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Cierre de Escena</div>
+    <p style="font-size:0.8rem;color:var(--text-dim);font-style:italic;margin-bottom:0.7rem;">
+      Al final de cada escena, ajusta el caos según el control que tuviste sobre la situación.
+    </p>
+    <div class="scene-row">
+      <button class="btn-scene win"  id="sceneWon" >✓ Controlé la escena</button>
+      <button class="btn-scene lose" id="sceneLost">✗ Perdí el control</button>
+    </div>
+    <div class="scene-note" id="sceneNote"></div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════
+     PANEL: IDEAS
+═══════════════════════════════════════ -->
+<section class="panel" id="tab-ideas" role="tabpanel">
+
+  <div class="card">
+    <div class="card-label">Generadores narrativos</div>
+    <div class="gen-grid">
+      <button class="gen-btn" data-g="situacion"><span class="gen-icon">⚔️</span>Situación</button>
+      <button class="gen-btn" data-g="npc"      ><span class="gen-icon">🧙</span>Personaje</button>
+      <button class="gen-btn" data-g="lugar"    ><span class="gen-icon">🗺️</span>Lugar</button>
+      <button class="gen-btn" data-g="giro"     ><span class="gen-icon">🌀</span>Giro</button>
+      <button class="gen-btn" data-g="pista"    ><span class="gen-icon">🔍</span>Pista</button>
+      <button class="gen-btn" data-g="conexion" ><span class="gen-icon">🔗</span>Conexión</button>
+    </div>
+    <div class="gen-output" id="genOut">
+      <span style="color:var(--text-dim);font-size:0.82rem;">Pulsa un botón para generar una idea…</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Contaminación de Género</div>
+    <p style="font-size:0.8rem;color:var(--text-dim);font-style:italic;margin-bottom:0.7rem;">
+      Introduce un elemento extraño y disonante en la narrativa actual.
+      A mayor caos, mayor probabilidad de que ocurra sola.
+    </p>
+    <div class="contam-btns">
+      <button class="btn-contam" data-c="scifi"   >⚙️ Sci-fi</button>
+      <button class="btn-contam" data-c="horror"  >🕯️ Horror</button>
+      <button class="btn-contam" data-c="misterio">🔎 Misterio</button>
+    </div>
+    <div class="contam-out" id="contamOut"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Tono de Escena</div>
+    <p style="font-size:0.8rem;color:var(--text-dim);font-style:italic;margin-bottom:0.7rem;">
+      Genera un descriptor de atmósfera para anclar la siguiente escena.
+    </p>
+    <div class="atmos-btns">
+      <button class="btn-atmos" data-atm="tension" >⚡ Tensión</button>
+      <button class="btn-atmos" data-atm="alivio"  >🌤 Alivio</button>
+      <button class="btn-atmos" data-atm="misterio">🌫 Misterio</button>
+    </div>
+    <div class="atmos-out" id="atmosOut"></div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════
+     PANEL: NOTAS
+═══════════════════════════════════════ -->
+<section class="panel" id="tab-notas" role="tabpanel">
+
+  <div class="card">
+    <div class="card-label">Notas de sesión</div>
+    <p style="font-size:0.8rem;color:var(--text-dim);font-style:italic;margin-bottom:0.7rem;">
+      Apunta lo que necesites: nombre de NPCs, lugares visitados, hilos abiertos.
+      Se guarda en el navegador.
+    </p>
+    <div class="notes-wrap">
+      <textarea id="notasArea" placeholder="Escribe aquí tus notas de sesión…" rows="10"></textarea>
+      <span class="notes-count" id="notasCount">0 car.</span>
+    </div>
+    <button class="btn-primary full btn-save-note" id="btnSaveNota">Guardar notas</button>
+    <button class="btn-ghost" id="btnClearNota" style="width:100%;margin-top:0.4rem;">Borrar todo</button>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Sobre esta herramienta</div>
+    <p style="font-size:0.82rem;color:var(--text-dim);line-height:1.6;">
+      <strong style="color:var(--text);">Oráculo</strong> es un motor de apoyo para rol en solitario.
+      No toma decisiones por ti: te da material para que tú lo interpretes.
+    </p>
+    <ul style="font-size:0.8rem;color:var(--text-dim);line-height:1.8;margin-top:0.6rem;padding-left:1.1rem;">
+      <li>El <strong style="color:var(--text);">factor de caos</strong> sube cuando pierdes el control de la escena y baja cuando lo mantienes. Afecta a los resultados del oráculo y a la frecuencia de eventos.</li>
+      <li>Los resultados <em>Sí, pero…</em> y <em>No, pero…</em> aparecen cuando el dado cae cerca del umbral: ahí es donde ocurren las mejores historias.</li>
+      <li>La <strong style="color:var(--text);">contaminación de género</strong> introduce elementos disonantes. Es más frecuente con caos alto.</li>
+      <li>Todos los datos se guardan en <strong style="color:var(--text);">localStorage</strong>: el caos, las notas y el registro sobreviven a recargas.</li>
+    </ul>
+    <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.75rem;font-style:italic;">
+      Inspirado en Mythic Game Master Emulator de Tana Pigeon.
+    </p>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════
+     PANEL: REGISTRO
+═══════════════════════════════════════ -->
+<section class="panel" id="tab-log" role="tabpanel">
+
+  <div class="log-head">
+    <div class="card-label" style="margin:0;">Historial de sesión</div>
+    <button class="btn-ghost" id="clearLog">Limpiar</button>
+  </div>
+  <div id="logWrap">
+    <div class="empty-msg">El registro está vacío.<br>Las acciones aparecerán aquí.</div>
+  </div>
+
+</section>
+
+<!-- ═══ SCRIPTS (orden importante) ═══ -->
+<script src="./js/dice.js"></script>
+<script src="./js/oracle.js"></script>
+<script src="./js/generators.js"></script>
+<script src="./js/storage.js"></script>
+<script src="./js/app.js"></script>
+
+</body>
+</html>
