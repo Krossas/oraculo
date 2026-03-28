@@ -3,7 +3,7 @@
 Herramienta web ligera de apoyo para jugar a rol en solitario.  
 Sin IA, sin suscripción, sin fricción.
 
-**[→ Jugar online](https://TU-USUARIO.github.io/oraculo/)**
+**[→ Jugar online](https://krossas.github.io/oraculo/)**
 
 ---
 
