@@ -63,33 +63,6 @@ oraculo/
 
 ---
 
-## Publicar en GitHub Pages
-
-1. **Fork o sube el proyecto** a un repositorio en tu cuenta de GitHub.
-2. Ve a **Settings → Pages**.
-3. En *Source*, selecciona **Deploy from a branch**.
-4. Selecciona la rama `main` y la carpeta `/ (root)`.
-5. Pulsa **Save**. En 1–2 minutos el sitio estará disponible en:  
-   `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`
-
-> ⚠️ **Importante:** No abras `index.html` directamente desde el sistema de archivos (`file://`). El navegador bloqueará la carga del JSON por restricciones CORS. Usa siempre un servidor web o GitHub Pages.
-
-### Desarrollo local
-
-Si quieres probar localmente sin publicar, usa cualquier servidor estático:
-
-```bash
-# Python 3
-python3 -m http.server 8000
-
-# Node.js (npx)
-npx serve .
-
-# VS Code: instala la extensión "Live Server" y abre con ella
-```
-
----
-
 ## Añadir contenido
 
 Todo el contenido narrativo está en `data/generators.json`. El formato es simple y extensible:
