@@ -68,6 +68,21 @@ function initChaos() {
       log('Caos', `Factor de caos → ${chaos}`, '🌀');
     }
   });
+
+  document.getElementById('chaosHelpBtn').addEventListener('click', () => {
+    document.getElementById('chaosModal').classList.remove('hidden');
+  });
+
+  document.getElementById('chaosModalClose').addEventListener('click', () => {
+    document.getElementById('chaosModal').classList.add('hidden');
+  });
+
+  // Cerrar modal al hacer click fuera
+  document.getElementById('chaosModal').addEventListener('click', (e) => {
+    if (e.target.id === 'chaosModal') {
+      document.getElementById('chaosModal').classList.add('hidden');
+    }
+  });
 }
 
 function renderChaos() {
@@ -101,28 +116,79 @@ function initTabs() {
 function initDice() {
   const input = document.getElementById('diceInput');
   const box   = document.getElementById('diceBox');
+  const countVal = document.getElementById('countVal');
+  const modVal   = document.getElementById('modVal');
+
+  let diceCount = 1;
+  let diceMod   = 0;
+
+  // Actualizar display
+  function updateControls() {
+    countVal.textContent = diceCount;
+    modVal.textContent = diceMod;
+  }
+  updateControls();
+
+  // Botones de control
+  document.getElementById('countUp').addEventListener('click', () => {
+    if (diceCount < 20) diceCount++;
+    updateControls();
+  });
+  document.getElementById('countDown').addEventListener('click', () => {
+    if (diceCount > 1) diceCount--;
+    updateControls();
+  });
+  document.getElementById('modUp').addEventListener('click', () => {
+    if (diceMod < 99) diceMod++;
+    updateControls();
+  });
+  document.getElementById('modDown').addEventListener('click', () => {
+    if (diceMod > -99) diceMod--;
+    updateControls();
+  });
 
   // Botón tirar
   document.getElementById('rollBtn').addEventListener('click', () => doRoll(input.value));
   input.addEventListener('keydown', e => { if (e.key === 'Enter') doRoll(input.value); });
 
-  // Botones rápidos de tipo de dado
+  // Botones rápidos de tipo de dado (usa el contador / modificador cuando aplica)
   document.querySelectorAll('.dice-quick').forEach(b => {
-    b.addEventListener('click', () => { input.value = b.dataset.d; doRoll(b.dataset.d); });
-  });
+    b.addEventListener('click', () => {
+      let diceType = b.dataset.d.toLowerCase();
+      const qty = diceCount;
+      const modifier = diceMod;
 
-  // Accesos rápidos
-  document.querySelectorAll('[data-q]').forEach(b => {
-    b.addEventListener('click', () => { input.value = b.dataset.q; doRoll(b.dataset.q); });
+      if (/df$/.test(diceType) || diceType === 'fate') {
+        diceType = `${qty}df`;
+      } else {
+        const m = diceType.match(/^(\d+)d(\d+)$/);
+        if (m) diceType = `${qty}d${m[2]}`;
+        else diceType = `${qty}${diceType}`;
+      }
+
+      if (modifier !== 0 && !/[+-]\d+$/.test(diceType)) {
+        diceType += modifier > 0 ? `+${modifier}` : `${modifier}`;
+      }
+
+      input.value = diceType;
+      doRoll(diceType);
+    });
   });
 
   function doRoll(notation) {
-    const res = parseDice(notation);
+    let expression = notation.trim().toLowerCase();
+    const modifier = diceMod;
+
+    if (!/[+-]\d+$/.test(expression) && modifier !== 0) {
+      expression += modifier > 0 ? `+${modifier}` : `${modifier}`;
+    }
+
+    const res = parseDice(expression);
     pulse(box, 'anim-shake');
     setTimeout(() => {
       if (!res) {
         box.innerHTML = `<span class="result-placeholder" style="color:var(--red-bright)">
-          Formato no reconocido. Usa: 2d6 · 1d20+3 · 4df
+          Formato no reconocido. Usa: 2d6 · 1d20+3 · 1df
         </span>`;
         return;
       }
@@ -237,6 +303,34 @@ function initNotas() {
       notasGuardar('');
       updateCount();
     }
+  });
+
+  document.getElementById('btnExportNota').addEventListener('click', () => {
+    const blob = new Blob([ta.value], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'notas-oraculo.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('fileImportNota').addEventListener('change', e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      ta.value = String(reader.result || '');
+      notasGuardar(ta.value);
+      updateCount();
+      alert('Notas importadas correctamente.');
+    };
+    reader.onerror = () => {
+      alert('No se ha podido leer el archivo.');
+    };
+    reader.readAsText(file);
   });
 
   function updateCount() {

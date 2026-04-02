@@ -3,7 +3,7 @@
    styles.css
 ═══════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap');
 
 /* ─── VARIABLES ─── */
 :root {
@@ -33,12 +33,13 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'IM Fell English', serif;
+  font-family: 'Crimson Text', serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  line-height: 1.5;
+  font-size: 1.1rem;
+  line-height: 1.7;
 }
 
 /* ─── SCROLLBAR ─── */
@@ -126,11 +127,49 @@ body {
 
 .chaos-value {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   color: var(--accent);
   min-width: 12px;
   text-align: center;
 }
+
+.tooltip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 0.35rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.tooltip-btn:hover {
+  color: var(--accent-bright);
+  border-color: var(--accent);
+}
+
+.chaos-popup {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.7rem;
+  margin-top: 0.6rem;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.chaos-popup h3, .chaos-popup h4 {
+  margin: 0.35rem 0 0.2rem;
+}
+
+.chaos-popup.hidden { display: none; }
 
 /* ═══ TABS ═══ */
 #tabs {
@@ -146,13 +185,13 @@ body {
 .tab {
   flex: 1;
   min-width: 0;
-  padding: 0.7rem 0.25rem;
+  padding: 1rem 0.4rem;
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
   color: var(--text-dim);
   font-family: 'Cinzel', serif;
-  font-size: clamp(0.5rem, 2.2vw, 0.68rem);
+  font-size: clamp(0.75rem, 2.5vw, 0.9rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
@@ -184,11 +223,11 @@ body {
 
 .card-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
+  font-size: 0.85rem;
+  letter-spacing: 0.19em;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.9rem;
 }
 
 /* ═══ BUTTONS — base ═══ */
@@ -260,7 +299,7 @@ body {
 
 .result-detail {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
   margin-top: 0.3rem;
 }
@@ -287,6 +326,52 @@ body {
 }
 
 .dice-quick:hover { border-color: var(--accent); color: var(--accent-bright); }
+
+.dice-controls-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  justify-content: center;
+}
+.control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+.control-group label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.control-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 32px; height: 32px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+  line-height: 1;
+  user-select: none;
+}
+.control-btn:hover { border-color: var(--accent); color: var(--accent); }
+.control-btn:active { transform: scale(0.95); }
+.control-value {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--accent);
+  min-width: 24px;
+  text-align: center;
+}
 
 .dice-input-row { display: flex; gap: 0.5rem; }
 
@@ -675,3 +760,72 @@ textarea:focus { border-color: var(--accent); }
 
 .anim-shake { animation: shake 0.32s ease-in-out; }
 .anim-in    { animation: fadeSlide 0.3s ease-out; }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0.2rem;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--text); }
+
+.modal-content h3 {
+  margin-top: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  color: var(--accent-bright);
+}
+
+.modal-content h4 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.modal-content ul {
+  margin: 0.5rem 0;
+  padding-left: 1.2rem;
+}
+
+.modal-content li {
+  margin-bottom: 0.3rem;
+}

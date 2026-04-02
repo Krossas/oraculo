@@ -26,7 +26,7 @@
   </div>
 
   <div class="chaos-wrap">
-    <div class="chaos-label">Factor de Caos</div>
+    <div class="chaos-label">Factor de Caos <button id="chaosHelpBtn" class="tooltip-btn" aria-label="Ayuda factor de caos">?</button></div>
     <div class="chaos-controls">
       <button class="chaos-btn" id="chaosDown" aria-label="Reducir caos">−</button>
       <div class="chaos-pips" id="pips" aria-label="Nivel de caos"></div>
@@ -44,6 +44,7 @@
   <button class="tab"        data-tab="oraculo" role="tab">🔮 Oráculo</button>
   <button class="tab"        data-tab="ideas"   role="tab">⚡ Ideas</button>
   <button class="tab"        data-tab="notas"   role="tab">📝 Notas</button>
+  <button class="tab"        data-tab="acerca"  role="tab">ℹ Acerca</button>
   <button class="tab"        data-tab="log"     role="tab">📜 Registro</button>
 </nav>
 
@@ -62,28 +63,32 @@
       <button class="dice-quick" data-d="1d12">d12</button>
       <button class="dice-quick" data-d="1d20">d20</button>
       <button class="dice-quick" data-d="1d100">d%</button>
-      <button class="dice-quick" data-d="4df">4dF</button>
+      <button class="dice-quick" data-d="1df">dF</button>
+    </div>
+    <div class="dice-controls-row">
+      <div class="control-group">
+        <label>Dados</label>
+        <div class="control-buttons">
+          <button class="control-btn" id="countDown" aria-label="Reducir dados">−</button>
+          <span class="control-value" id="countVal">1</span>
+          <button class="control-btn" id="countUp" aria-label="Aumentar dados">+</button>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Modificador</label>
+        <div class="control-buttons">
+          <button class="control-btn" id="modDown" aria-label="Reducir modificador">−</button>
+          <span class="control-value" id="modVal">0</span>
+          <button class="control-btn" id="modUp" aria-label="Aumentar modificador">+</button>
+        </div>
+      </div>
     </div>
     <div class="dice-input-row">
-      <input type="text" id="diceInput" placeholder="2d6 · 1d20+3 · 3d8-1 · 4df" value="2d6" aria-label="Notación de dados">
+      <input type="text" id="diceInput" placeholder="1d6 · 1d20+3 · 3d8-1 · 1dF" value="1d6" aria-label="Notación de dados">
       <button class="btn-primary" id="rollBtn">Tirar</button>
     </div>
     <div class="result-box" id="diceBox">
       <span class="result-placeholder">Introduce una tirada y pulsa tirar</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">Tiradas frecuentes</div>
-    <div class="quick-tags">
-      <button class="btn-ghost" data-q="2d6">2d6 resolución</button>
-      <button class="btn-ghost" data-q="3d6">3d6 atributo</button>
-      <button class="btn-ghost" data-q="1d20">1d20 acción</button>
-      <button class="btn-ghost" data-q="2d6+2">2d6+2 bonificado</button>
-      <button class="btn-ghost" data-q="2d6-2">2d6−2 penalizado</button>
-      <button class="btn-ghost" data-q="4df">4dF FATE</button>
-      <button class="btn-ghost" data-q="2d10">2d10 Year Zero</button>
-      <button class="btn-ghost" data-q="1d100">d% percentil</button>
     </div>
   </div>
 
@@ -216,9 +221,18 @@
       <span class="notes-count" id="notasCount">0 car.</span>
     </div>
     <button class="btn-primary full btn-save-note" id="btnSaveNota">Guardar notas</button>
-    <button class="btn-ghost" id="btnClearNota" style="width:100%;margin-top:0.4rem;">Borrar todo</button>
+    <button class="btn-ghost" id="btnClearNota" style="width:100%;margin-top:0.35rem;">Borrar todo</button>
+    <button class="btn-ghost" id="btnExportNota" style="width:100%;margin-top:0.35rem;">Exportar notas (TXT)</button>
+    <label for="fileImportNota" class="btn-ghost" style="width:100%;margin-top:0.35rem;cursor:pointer;display:block;text-align:center;">Importar notas (TXT)</label>
+    <input type="file" id="fileImportNota" accept=".txt" style="display:none;" />
   </div>
 
+</section>
+
+<!-- ═══════════════════════════════════════
+     PANEL: ACERCA
+═══════════════════════════════════════ -->
+<section class="panel" id="tab-acerca" role="tabpanel">
   <div class="card">
     <div class="card-label">Sobre esta herramienta</div>
     <p style="font-size:0.82rem;color:var(--text-dim);line-height:1.6;">
@@ -235,7 +249,6 @@
       Inspirado en Mythic Game Master Emulator de Tana Pigeon.
     </p>
   </div>
-
 </section>
 
 <!-- ═══════════════════════════════════════
@@ -258,6 +271,36 @@
 <script src="./js/oracle.js"></script>
 <script src="./js/generators.js"></script>
 <script src="./js/storage.js"></script>
+
+<!-- MODAL CHAOS -->
+<div id="chaosModal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <button class="modal-close" id="chaosModalClose">&times;</button>
+    <h3>¿Qué es el factor de caos?</h3>
+    <p>El <strong>“factor de caos”</strong> mide cuán impredecible está la historia en un momento dado.</p>
+    <p>Normalmente va de <strong>1 a 9</strong>: más alto = más giros y eventos inesperados.</p>
+    <h4>Caos bajo (1–3)</h4>
+    <ul>
+      <li>Historia estable, predictible.</li>
+      <li>Menos eventos aleatorios.</li>
+    </ul>
+    <h4>Caos medio (4–6)</h4>
+    <ul>
+      <li>Mezcla de control y sorpresa.</li>
+    </ul>
+    <h4>Caos alto (7–9)</h4>
+    <ul>
+      <li>Eventos inesperados frecuentes.</li>
+      <li>La narración se descontrola.</li>
+    </ul>
+    <h4>¿Cómo influye?</h4>
+    <ul>
+      <li>Afecta la probabilidad de respuestas del oráculo (bajo = lógico, alto = raros).</li>
+      <li>Genera más eventos aleatorios con caos alto.</li>
+      <li>Cuando cierras escena, sube/baja según control.</li>
+    </ul>
+  </div>
+</div>
 <script src="./js/app.js"></script>
 
 </body>

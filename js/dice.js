@@ -19,13 +19,16 @@ function parseDice(raw) {
   const s = raw.trim().toLowerCase().replace(/\s+/g, '');
 
   // ── Dados FATE/FUDGE ─────────────────────────────────────
-  if (s === '4df' || s === 'fate' || s === '4dfate') {
-    const r = [0, 0, 0, 0].map(() => ri(1, 3) - 2); // -1, 0, +1
+  let fateMatch = s.match(/^(\d*)df(?:ate)?$/);
+  if (s === 'fate' || fateMatch) {
+    const count = fateMatch && fateMatch[1] ? Math.min(Math.max(parseInt(fateMatch[1], 10), 1), 20) : 1;
+    const r = Array.from({ length: count }, () => ri(1, 3) - 2); // -1, 0, +1
     return {
       type: 'fate',
       results: r,
       total: r.reduce((a, b) => a + b, 0),
-      notation: '4dF'
+      count,
+      notation: `${count}dF`
     };
   }
 
@@ -71,7 +74,7 @@ function buildDiceHTML(res) {
     return `
       <div class="fate-row">${diceHTML}</div>
       <div class="result-big">${sign}${res.total}</div>
-      <div class="result-detail">4dF · suma: ${sign}${res.total}</div>
+      <div class="result-detail">${res.notation} · suma: ${sign}${res.total}</div>
     `;
   }
 
@@ -101,7 +104,7 @@ function buildDiceHTML(res) {
 function diceLogText(res) {
   if (res.type === 'fate') {
     const sign = res.total >= 0 ? '+' : '';
-    return `4dF → ${sign}${res.total} [${res.results.map(v => v > 0 ? '+' : v < 0 ? '−' : '□').join(' ')}]`;
+    return `${res.notation} → ${sign}${res.total} [${res.results.map(v => v > 0 ? '+' : v < 0 ? '−' : '□').join(' ')}]`;
   }
   let detail = res.count > 1 ? ` [${res.results.join(', ')}]` : '';
   if (res.mod > 0) detail += `+${res.mod}`;
