@@ -44,8 +44,8 @@
   <button class="tab"        data-tab="oraculo" role="tab">🔮 Oráculo</button>
   <button class="tab"        data-tab="ideas"   role="tab">⚡ Ideas</button>
   <button class="tab"        data-tab="notas"   role="tab">📝 Notas</button>
-  <button class="tab"        data-tab="acerca"  role="tab">ℹ Acerca</button>
   <button class="tab"        data-tab="log"     role="tab">📜 Registro</button>
+  <button class="tab"        data-tab="acerca"  role="tab">ℹ Acerca</button>
 </nav>
 
 <!-- ═══════════════════════════════════════
@@ -54,7 +54,7 @@
 <section class="panel active" id="tab-dados" role="tabpanel">
 
   <div class="card">
-    <div class="card-label">Tipo de dado rápido</div>
+    <div class="card-label">Tipo de dado</div>
     <div class="dice-grid">
       <button class="dice-quick" data-d="1d4">d4</button>
       <button class="dice-quick" data-d="1d6">d6</button>
@@ -84,7 +84,7 @@
       </div>
     </div>
     <div class="dice-input-row">
-      <input type="text" id="diceInput" placeholder="1d6 · 1d20+3 · 3d8-1 · 1dF" value="1d6" aria-label="Notación de dados">
+      <input type="text" disabled id="diceInput" placeholder="1d6 · 1d20+3 · 3d8-1 · 1dF" value="1d6" aria-label="Notación de dados">
       <button class="btn-primary" id="rollBtn">Tirar</button>
     </div>
     <div class="result-box" id="diceBox">
@@ -230,6 +230,21 @@
 </section>
 
 <!-- ═══════════════════════════════════════
+     PANEL: REGISTRO
+═══════════════════════════════════════ -->
+<section class="panel" id="tab-log" role="tabpanel">
+
+  <div class="log-head">
+    <div class="card-label" style="margin:0;">Historial de sesión</div>
+    <button class="btn-ghost" id="clearLog">Limpiar</button>
+  </div>
+  <div id="logWrap">
+    <div class="empty-msg">El registro está vacío.<br>Las acciones aparecerán aquí.</div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════
      PANEL: ACERCA
 ═══════════════════════════════════════ -->
 <section class="panel" id="tab-acerca" role="tabpanel">
@@ -249,21 +264,6 @@
       Inspirado en Mythic Game Master Emulator de Tana Pigeon.
     </p>
   </div>
-</section>
-
-<!-- ═══════════════════════════════════════
-     PANEL: REGISTRO
-═══════════════════════════════════════ -->
-<section class="panel" id="tab-log" role="tabpanel">
-
-  <div class="log-head">
-    <div class="card-label" style="margin:0;">Historial de sesión</div>
-    <button class="btn-ghost" id="clearLog">Limpiar</button>
-  </div>
-  <div id="logWrap">
-    <div class="empty-msg">El registro está vacío.<br>Las acciones aparecerán aquí.</div>
-  </div>
-
 </section>
 
 <!-- ═══ SCRIPTS (orden importante) ═══ -->

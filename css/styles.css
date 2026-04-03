@@ -38,8 +38,18 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  font-size: 1.1rem;
-  line-height: 1.7;
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+* {
+  font-family: 'Crimson Text', serif;
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
 }
 
 /* ─── SCROLLBAR ─── */
@@ -174,33 +184,62 @@ body {
 /* ═══ TABS ═══ */
 #tabs {
   display: flex;
+  flex-wrap: wrap;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
   position: sticky;
   top: 54px;
   z-index: 19;
   overflow-x: auto;
+  gap: 0.1rem;
 }
 
 .tab {
-  flex: 1;
-  min-width: 0;
-  padding: 1rem 0.4rem;
+  flex: 1 1 120px;
+  min-width: 90px;
+  padding: 0.9rem 0.45rem;
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
   color: var(--text-dim);
-  font-family: 'Cinzel', serif;
-  font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+  font-size: 0.95rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all var(--transition);
-  white-space: nowrap;
+  white-space: break-spaces;
+  text-align: center;
 }
 
 .tab:hover  { color: var(--text); }
 .tab.active { color: var(--accent-bright); border-bottom-color: var(--accent); }
+
+@media (max-width: 760px) {
+  #tabs {
+    justify-content: flex-start;
+    gap: 0.15rem;
+  }
+
+  .tab {
+    flex: 1 1 110px;
+    min-width: 80px;
+    font-size: 0.85rem;
+    padding: 0.7rem 0.35rem;
+  }
+
+  #header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .brand-title {
+    font-size: 1.1rem;
+  }
+
+  .brand-sub {
+    font-size: 0.68rem;
+  }
+}
 
 /* ═══ PANELS ═══ */
 .panel {
@@ -222,12 +261,12 @@ body {
 }
 
 .card-label {
-  font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.19em;
+  font-family: inherit;
+  font-size: 0.95rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.85rem;
 }
 
 /* ═══ BUTTONS — base ═══ */
@@ -235,11 +274,25 @@ body {
   background: var(--accent);
   border: none;
   color: #090909;
-  font-family: 'Cinzel', serif;
-  font-size: 0.68rem;
-  letter-spacing: 0.13em;
+  font-family: inherit;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.7rem 1rem;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  border-radius: var(--radius);
+}
+
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.75rem;
   cursor: pointer;
   transition: all var(--transition);
   border-radius: var(--radius);
@@ -248,20 +301,6 @@ body {
 .btn-primary:hover  { background: var(--accent-bright); box-shadow: 0 0 14px var(--accent-glow); }
 .btn-primary:active { transform: scale(0.97); }
 .btn-primary.full   { width: 100%; }
-
-.btn-ghost {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.45rem 0.7rem;
-  cursor: pointer;
-  transition: all var(--transition);
-  border-radius: var(--radius);
-}
 
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -326,6 +365,12 @@ body {
 }
 
 .dice-quick:hover { border-color: var(--accent); color: var(--accent-bright); }
+
+.dice-quick.active {
+  border-color: var(--accent-bright);
+  color: var(--accent-bright);
+  background: rgba(200,131,42,0.1);
+}
 
 .dice-controls-row {
   display: flex;
@@ -397,13 +442,13 @@ textarea {
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text-bright);
-  font-family: 'IM Fell English', serif;
-  font-size: 0.88rem;
+  font-family: inherit;
+  font-size: 1rem;
   padding: 0.65rem 0.8rem;
   outline: none;
   resize: vertical;
   min-height: 90px;
-  line-height: 1.5;
+  line-height: 1.6;
   transition: border-color var(--transition);
   border-radius: var(--radius);
 }

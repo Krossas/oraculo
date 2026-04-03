@@ -121,11 +121,30 @@ function initDice() {
 
   let diceCount = 1;
   let diceMod   = 0;
+  let baseDice  = 'd6';          // Default dice type for controles
+  let manualInput = false;
 
   // Actualizar display
+  function applyDiceInput() {
+    if (manualInput || !baseDice) return;
+
+    if (baseDice === 'df' || baseDice === 'fate') {
+      input.value = `${diceCount}df`;
+      return;
+    }
+
+    const m = baseDice.match(/^d(\d+)$/);
+    if (m) {
+      let value = `${diceCount}d${m[1]}`;
+      if (diceMod !== 0) value += diceMod > 0 ? `+${diceMod}` : `${diceMod}`;
+      input.value = value;
+    }
+  }
+
   function updateControls() {
     countVal.textContent = diceCount;
     modVal.textContent = diceMod;
+    applyDiceInput();
   }
   updateControls();
 
@@ -150,6 +169,7 @@ function initDice() {
   // Botón tirar
   document.getElementById('rollBtn').addEventListener('click', () => doRoll(input.value));
   input.addEventListener('keydown', e => { if (e.key === 'Enter') doRoll(input.value); });
+  input.addEventListener('input', () => { manualInput = true; });
 
   // Botones rápidos de tipo de dado (usa el contador / modificador cuando aplica)
   document.querySelectorAll('.dice-quick').forEach(b => {
@@ -157,30 +177,48 @@ function initDice() {
       let diceType = b.dataset.d.toLowerCase();
       const qty = diceCount;
       const modifier = diceMod;
+      manualInput = false;
+
+      // Marcar botón seleccionado
+      document.querySelectorAll('.dice-quick').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
 
       if (/df$/.test(diceType) || diceType === 'fate') {
+        baseDice = 'df';
         diceType = `${qty}df`;
       } else {
         const m = diceType.match(/^(\d+)d(\d+)$/);
-        if (m) diceType = `${qty}d${m[2]}`;
-        else diceType = `${qty}${diceType}`;
+        if (m) {
+          baseDice = `d${m[2]}`;
+          diceType = `${qty}d${m[2]}`;
+        } else {
+          baseDice = diceType;
+          diceType = `${qty}${diceType}`;
+        }
       }
 
-      if (modifier !== 0 && !/[+-]\d+$/.test(diceType)) {
+      const isFate = /df$/.test(diceType) || /fate$/.test(diceType);
+      if (modifier !== 0 && !isFate && !/[+-]\d+$/.test(diceType)) {
         diceType += modifier > 0 ? `+${modifier}` : `${modifier}`;
       }
 
       input.value = diceType;
-      doRoll(diceType);
+      // No ejecutar tirada aquí: solo actualización de configuración.
     });
   });
 
   function doRoll(notation) {
     let expression = notation.trim().toLowerCase();
     const modifier = diceMod;
+    const isFateRoll = /df$/.test(expression) || /fate$/.test(expression);
 
-    if (!/[+-]\d+$/.test(expression) && modifier !== 0) {
+    if (!/[+-]\d+$/.test(expression) && modifier !== 0 && !isFateRoll) {
       expression += modifier > 0 ? `+${modifier}` : `${modifier}`;
+    }
+
+    if (isFateRoll) {
+      // Si es dado fudge, no aplicamos modificadores.
+      expression = expression.replace(/[+-]\d+$/, '');
     }
 
     const res = parseDice(expression);
